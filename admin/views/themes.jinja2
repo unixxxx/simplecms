@@ -1,0 +1,120 @@
+{% extends "admin/views/base.jinja2" %}
+<head>
+    {% block head %}
+        <script type="text/javascript" src="../../static/js/jasny-bootstrap.min.js"></script>
+        <script src="../../static/js/bootbox.min.js"></script>
+        <link rel="stylesheet" href="../../static/css/jasny-bootstrap.min.css">
+    {% endblock %} }}
+</head>
+{% block themes %}
+    class="active"
+{% endblock %}
+{% block content %}
+    <script>
+        function deleteTheme(theme_id, filename) {
+            bootbox.confirm("Are you sure?", function (result) {
+                if (result) {
+                    $.ajax({type: 'POST', url: '/admin/themes/delete', data: {id: theme_id, name: filename}})
+                            .done(function () {
+                                window.location.href = '/admin/themes'
+                            })
+                }
+                else {
+                    alert(result)
+                }
+            });
+        }
+
+        function activateTheme(theme_id) {
+            bootbox.confirm("Are you sure?", function (result) {
+                if (result) {
+                    $.ajax({type: 'POST', url: '/admin/themes/activate', data: {id: theme_id}})
+                            .done(function () {
+                                window.location.href = '/admin/themes'
+                            })
+                }
+                else {
+                    alert(result)
+                }
+            });
+        }
+    </script>
+    <div class="jumbotron" style="padding-bottom: 0px">
+        <form role="form" method="post" action="/admin/themes/uploadtheme" enctype="multipart/form-data">
+            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                <div class="form-control" data-trigger="fileinput">
+                    <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                    <span class="fileinput-filename">choose theme</span>
+                </div>
+                <span class="input-group-addon btn btn-default btn-file">
+                    <span class="fileinput-new">Upload</span>
+                    <span class="fileinput-exists">Upload</span>
+                    <input type="file" name="newtheme">
+                    <input type="submit">
+                </span>
+                <a href="#" class="input-group-addon btn btn-default fileinput-exists"
+                   data-dismiss="fileinput">Remove</a>
+            </div>
+        </form>
+        {% if  errorMessage %}
+            <div class=" alert alert-danger" style="text-align: center">{{ errorMessage }}</div>
+        {% endif %}
+    </div>
+
+    <div class="container-fluid jumbotron table-responsive table-responsive"
+         style="padding-bottom: 0px; padding-top: 0px;">
+        <table class="table table-hover table-striped" style="margin-bottom: 0px;">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Upload Date</th>
+                <th>Operation</th>
+                <th>Active?</th>
+            </tr>
+            </thead>
+            <tbody id="postTable">
+            {% for theme in  themes %}
+                <tr id="{{ theme.id }}">
+                    <td>{{ theme.title }}</td>
+                    <td>{{ theme.date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                    <td>
+                        <button type="submit" class="btn btn-success" id="{{ theme.id }}"
+                                onclick="activateTheme(this.getAttribute('id'))">Activate
+                        </button>
+                        <button type="submit" class="btn btn-danger" id="{{ theme.id }}" theme_name="{{ theme.title }}"
+                                onclick="deleteTheme(this.getAttribute('id'),this.getAttribute('theme_name'))">
+                            Delete
+                        </button>
+                    </td>
+                    {% if theme.isactive==True %}
+                        <td><h4><span class="label label-success">True</span></h4></td>
+                    {% else %}
+                        <td><h4><span class="label label-danger">False</span></h4></td>
+                    {% endif %}
+                </tr>
+                <tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% if count and count>10 %}
+            <div class="row" id="pager">
+                <div class="col-lg-12">
+                    <ul class="pagination">
+                        <li><a href="/admin/themes/1">&laquo;</a></li>
+                        {% for i in range(1,ceil+1) %}
+                            <li id="{{ i }}"><a href="/admin/themes/{{ i }}">{{ i }}</a></li>
+                        {% endfor %}
+                        <li><a href="/admin/themes/{{ ceil }}">&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+            <script>
+                var curr =
+                {{ currentPage|safe }} ||
+                1
+                $('#' + curr).addClass('active')
+            </script>
+        {% endif %}
+    </div>
+{% endblock %}
+

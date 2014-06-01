@@ -1,0 +1,70 @@
+{% extends "admin/views/base.jinja2" %}
+<head>
+    {% block head %}
+        <script src="../../static/js/modernizr-2.6.2.min.js"></script>
+        <script src="../../static/js/bootstrap-rta.min.js"></script>
+        <link rel="stylesheet" href="../../static/css/bootstrap-rta-1.0.1.min.css">
+    {% endblock %} }}
+</head>
+{% block posts %}
+    class="active"
+{% endblock %}
+{% block content %}
+    <div class="container-fluid jumbotron">
+        <form role="form" action="/admin/posts/addpost" method="POST">
+            <div class="form-group container">
+                <input type="text" class="form-control" name="title" placeholder="title"
+                       value="{% if post %}{{ post.title }}{% endif %}">
+            </div>
+            <div class="form-group container">
+                <textarea rows="20" class="rta form-control" id="ta_allbtn" name="content" style="resize: none;"
+                          placeholder="content">{% if post %}{{ post.content }}{% endif %}</textarea>
+            </div>
+            <div class="container">
+                <button type="submit" class="btn btn-success">save</button>
+            </div>
+            {% if post %}
+                <input type="hidden" name="isediting" value="{{ post.id }}">
+            {% endif %}
+        </form>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+            //$.rta.defaultButtons += ', html'; // Useful when debugging (to view HTML)
+
+            //$.rta(); // The simplest initialization... assigns the default button set to all textarea elements with the 'rta' class (unless a 'data-rta' attribute is defined on the textarea)
+            //$.rta('bold italic, ul ol'); // Assigns 4 buttons (in 2 groups) to all textarea elements with the 'rta' class
+
+            $('#ta_def').rta(); // Use the default buttons
+
+            $('#ta_twoway').rta('bold, italic, font-name font-size font-color, indent-right indent-left, ul ol, html'); // Two way editing enabled via 'data-rta-twoway="true"' attribute on the textarea
+
+            $('#ta_html').rta(); // Buttons are defined on the textarea in a 'data-rta' attribute
+
+            $('#ta_allbtn').rta($.rta.allButtons); // Show all supported buttons
+
+            $('#ta_small').rta({ 'btnsize': "small" }); // Upsize from 'mini' buttons to 'small', can also be accomplished via 'data-rta-btnsize="small"' attribute on the textarea
+
+            initHelp(); // Initializes the demo 'info' help
+        });
+
+        function initHelp() {
+            $('#ta_def').after($('#info_def').html());
+            $('#ta_twoway').after($('#info_twoway').html());
+            $('#ta_html').after($('#info_html').html());
+            $('#ta_allbtn').after($('#info_allbtn').html());
+            $('#ta_small').after($('#info_small').html());
+            $('#ta_plain').after($('#info_plain').html());
+
+            $('.help-button').click(function (event) {
+                var jbtn = $(event.target);
+                if (!jbtn.hasClass('btn')) jbtn = jbtn.closest('.btn');
+
+                jbtn.next().toggle();
+                event.preventDefault();
+            });
+        }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,28 @@
+from bottle import Bottle, redirect, request
+from beaker.middleware import SessionMiddleware
+
+session_opts = {
+    'session.cookie_expires': True
+}
+app = SessionMiddleware(Bottle(), session_opts)
+session = {}
+
+
+def make_auth_decorator(fail_redirect='login'):
+    def auth_require(f_redirect=fail_redirect):
+        def decorator(func):
+            def wrapper(*a, **ka):
+                global session
+                if request.get_cookie('loggedin') and session.get('loggedin', '') == request.get_cookie('loggedin'):
+                    return func(*a, **ka)
+                else:
+                    redirect(f_redirect)
+
+            return wrapper
+
+        return decorator
+
+    return auth_require
+
+
+issessionactive = make_auth_decorator(fail_redirect='/admin/login')
