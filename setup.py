@@ -11,7 +11,7 @@ setup(
     description='simple cms',
     install_requires=[
         'bottle',
-        'pymongo',
+        'pymongo >= 2.7.1',
         'mongoengine',
         'beaker',
         'jinja2'
