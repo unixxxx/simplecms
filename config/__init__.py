@@ -17,7 +17,7 @@ DB_CREDENTIALS = {
         'host': os.environ['OPENSHIFT_MONGODB_DB_HOST'],
         'port': int(os.environ['OPENSHIFT_MONGODB_DB_PORT'])
     },
-    'db': 'tsucms'
+    'db': os.environ['OPENSHIFT_APP_NAME']
 }
 
 
