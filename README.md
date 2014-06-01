@@ -20,7 +20,8 @@ DB_CREDENTIALS = {
 }
 ```
 
-when application is deployed default user is created for admin interface
+when application is deployed default user is created for admin interface.
+
 username: admin
 password: admin
 
