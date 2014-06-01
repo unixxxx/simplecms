@@ -1,11 +1,10 @@
 ###Simple CMS written in python3 bottle framework
 
 by default, project is configured to work on openshift cloud: https://openshift.redhat.com.
+You only need to add mongodb cartridge and restart app.
 
-you only need to add mongodb cartridge and restart app.
 
-
-if you want to deploy app on your own server, you have to configure ```DB_CREDENTIALS``` variable
+If you want to deploy app on your own server, you have to configure ```DB_CREDENTIALS``` variable
 in ```config/__init__.py```
 
 ```
@@ -20,7 +19,7 @@ DB_CREDENTIALS = {
 }
 ```
 
-when application is deployed default user is created for admin interface.
+When application is deployed default user is created for admin interface.
 ```
 username: admin
 password: admin
